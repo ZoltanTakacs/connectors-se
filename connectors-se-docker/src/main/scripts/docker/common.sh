@@ -23,11 +23,7 @@ export CONNECTOR_VERSION=$(grep "<version>" "$BASEDIR/pom.xml" | head -n 1 | sed
 export TALEND_REGISTRY="${TALEND_REGISTRY:-registry.datapwn.com}"
 DOCKER_IMAGE_VERSION=${DOCKER_IMAGE_VERSION:-$CONNECTOR_VERSION}
 if [[ "$DOCKER_IMAGE_VERSION" = *"SNAPSHOT" ]]; then
-
-    BRANCH="$1"
-    [ "master" = "$BRANCH" ] && BRANCH=""
-    [ -n "$BRANCH" ] && BRANCH=_${BRANCH}
-
+    BRANCH=_${1}
     DOCKER_IMAGE_VERSION=$(echo $CONNECTOR_VERSION | sed "s/-SNAPSHOT//")${BRANCH}_$(date +%Y%m%d%I%M%S)
 fi
 export DOCKER_IMAGE_VERSION
