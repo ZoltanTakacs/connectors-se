@@ -65,7 +65,7 @@ spec:
               passwordVariable: 'DOCKER_PASSWORD',
               usernameVariable: 'DOCKER_LOGIN')
           ]) {
-            sh "chmod +x ./connectors-se-docker/src/main/scripts/docker/*.sh && ./connectors-se-docker/src/main/scripts/docker/all.sh $(git rev-parse --abbrev-ref HEAD | tr / _)"
+            sh "chmod +x ./connectors-se-docker/src/main/scripts/docker/*.sh && ./connectors-se-docker/src/main/scripts/docker/all.sh `git rev-parse --abbrev-ref HEAD | tr / _`"
           }
         }
       }
