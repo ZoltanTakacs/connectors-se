@@ -52,7 +52,7 @@ spec:
     stage('Run maven') {
       steps {
         container('maven') {
-          sh 'mvn clean install -T1C -Pdocker'
+          sh 'mvn clean install -T1C -Pdocker -DskipTests'
         }
       }
     }
