@@ -1,10 +1,5 @@
 package org.talend.components.jdbc.service;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.talend.components.jdbc.DerbyExtension;
@@ -16,6 +11,11 @@ import org.talend.sdk.component.api.service.healthcheck.HealthCheckStatus;
 import org.talend.sdk.component.junit.ComponentsHandler;
 import org.talend.sdk.component.junit5.Injected;
 import org.talend.sdk.component.junit5.WithComponents;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @WithDerby
 @WithComponents("org.talend.components.jdbc") // component package
@@ -32,8 +32,9 @@ class ActionServiceTest {
     void loadSupportedDataBaseTypes() {
         final Values values = myService.loadSupportedDataBaseTypes();
         assertNotNull(values);
-        assertEquals(3, values.getItems().size());
-        assertEquals(asList("MYSQL", "DERBY", "ORACLE"), values.getItems().stream().map(Values.Item::getId).collect(toList()));
+        assertEquals(8, values.getItems().size());
+        assertEquals(asList("SQL_SERVER", "MYSQL", "MARIADB", "DERBY", "SNOWFLAKE", "REDSHIFT", "POSTGRESQL", "AZURE_SQL"),
+                values.getItems().stream().map(Values.Item::getId).collect(toList()));
     }
 
     @Test
