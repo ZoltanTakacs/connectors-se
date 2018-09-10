@@ -3,47 +3,61 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.talend.components</groupId>
-    <artifactId>connectors-se</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>org.talend.components</groupId>
+        <artifactId>connectors-se</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>jdbc</artifactId>
-  <name>Components :: JDBC</name>
+    <artifactId>jdbc</artifactId>
+    <name>Components :: JDBC</name>
 
-  <properties>
-    <xbean-finder-shaded.version>4.8</xbean-finder-shaded.version>
-    <derby.version>10.12.1.1</derby.version>
-  </properties>
+    <properties>
+        <xbean-finder-shaded.version>4.8</xbean-finder-shaded.version>
+        <derby.version>10.12.1.1</derby.version>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.xbean</groupId>
-      <artifactId>xbean-finder-shaded</artifactId>
-      <version>${xbean-finder-shaded.version}</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-finder-shaded</artifactId>
+            <version>${xbean-finder-shaded.version}</version>
+        </dependency>
 
-    <!-- test -->
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>${derby.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyclient</artifactId>
-      <version>${derby.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbynet</artifactId>
-      <version>${derby.version}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>org.apache.beam</groupId>
+            <artifactId>beam-sdks-java-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.beam</groupId>
+            <artifactId>beam-sdks-java-io-jdbc</artifactId>
+            <version>${beam.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.talend.daikon</groupId>
+            <artifactId>daikon</artifactId>
+            <version>0.23.0</version>
+        </dependency>
+        <!-- test -->
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>${derby.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbynet</artifactId>
+            <version>${derby.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

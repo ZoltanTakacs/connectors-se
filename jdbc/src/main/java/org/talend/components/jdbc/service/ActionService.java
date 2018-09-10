@@ -29,6 +29,7 @@ public class ActionService {
     @Service
     private I18nMessage i18n;
 
+
     @DynamicValues(ACTION_LIST_SUPPORTED_DB)
     public Values loadSupportedDataBaseTypes() {
         return new Values(jdbcDriversService.getDrivers().keySet().stream().map(id -> new Values.Item(id, id)).collect(toList()));
@@ -71,6 +72,27 @@ public class ActionService {
         }
 
         return new HealthCheckStatus(HealthCheckStatus.Status.OK, i18n.successConnection());
+    }
+
+    public Connection getConnection(@Option final BasicDatastore datastore) throws Exception {
+
+        final URLClassLoader loader = jdbcDriversService.getDriverClassLoader(datastore.getDbType());
+            Driver driver = Driver.class
+                    .cast(loader.loadClass(jdbcDriversService.getDrivers().get(datastore.getDbType()).getClazz()).newInstance());
+
+            final Properties info = new Properties() {
+
+                {
+                    setProperty("user", datastore.getUserId());
+                    setProperty("password", datastore.getPassword());
+                }
+            };
+            try (Connection connection = driver.connect(datastore.getJdbcUrl(), info)) {
+                if (connection.isValid(15)) {
+                    return connection;
+                }
+            }
+            return null;
     }
 
 }
