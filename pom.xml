@@ -64,6 +64,7 @@
     <module>jdbc</module>
     <module>salesforce</module>
     <module>components-jms</module>
+    <module>components-activemq</module>
   </modules>
 
   <profiles>
