@@ -12,12 +12,11 @@
 // ============================================================================
 package org.talend.components.jms.service;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.talend.components.jms.configuration.BasicConfiguration;
 import org.talend.components.jms.datastore.JmsDataStore;
 import org.talend.sdk.component.api.configuration.Option;
 import org.talend.sdk.component.api.service.Service;
-import org.talend.sdk.component.api.service.completion.DynamicValues;
-import org.talend.sdk.component.api.service.completion.Values;
 import org.talend.sdk.component.api.service.healthcheck.HealthCheck;
 import org.talend.sdk.component.api.service.healthcheck.HealthCheckStatus;
 import org.talend.sdk.component.api.service.schema.DiscoverSchema;
@@ -28,18 +27,15 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.naming.Context;
-import javax.naming.NamingException;
-import java.net.URLClassLoader;
 import java.util.Collections;
 
-import static java.util.stream.Collectors.toList;
 import static org.talend.components.jms.MessageConst.MESSAGE_CONTENT;
 
 @Service
 public class ActionService {
 
-    public static final String ACTION_LIST_SUPPORTED_BROKER = "ACTION_LIST_SUPPORTED_BROKER";
     public static final String ACTION_BASIC_HEALTH_CHECK = "ACTION_BASIC_HEALTH_CHECK";
+
     public static final String DISCOVER_SCHEMA = "discoverSchema";
 
     @Service
@@ -47,11 +43,6 @@ public class ActionService {
 
     @Service
     private I18nMessage i18n;
-
-    @DynamicValues(ACTION_LIST_SUPPORTED_BROKER)
-    public Values loadSupportedJMSProviders() {
-        return new Values(jmsService.getProviders().keySet().stream().map(id -> new Values.Item(id, id)).collect(toList()));
-    }
 
     @DiscoverSchema(DISCOVER_SCHEMA)
     public Schema guessSchema(BasicConfiguration config) {
@@ -63,32 +54,19 @@ public class ActionService {
         if (datastore.getUrl() == null || datastore.getUrl().isEmpty()) {
             throw new IllegalArgumentException(i18n.errorEmptyURL());
         }
-        final URLClassLoader loader = jmsService.getProviderClassLoader(datastore.getModuleList());
-        if (loader == null) {
-            throw new IllegalStateException(i18n.errorLoadProvider(datastore.getModuleList(), null));
-        }
 
-        Context jndiContext = null;
         Connection connection = null;
 
+        // create ConnectionFactory
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(datastore.getUrl());
+
         try {
-            // create JNDI context
-            jndiContext = jmsService.getJNDIContext(datastore.getUrl(), datastore.getModuleList());
-            // create ConnectionFactory from JNDI
-            ConnectionFactory connectionFactory = jmsService.getConnectionFactory(jndiContext);
-
-            try {
-                connection = jmsService.getConnection(connectionFactory, datastore.isUserIdentity(), datastore.getUserName(),
-                        datastore.getPassword());
-            } catch (JMSException e) {
-                return new HealthCheckStatus(HealthCheckStatus.Status.KO, i18n.errorInvalidConnection());
-            }
-
-        } catch (ClassNotFoundException | NamingException | IllegalAccessException | InstantiationException e) {
-            return new HealthCheckStatus(HealthCheckStatus.Status.KO, i18n.errorInstantiateConnectionFactory(e.getMessage()));
+            connection = jmsService.getConnection(connectionFactory, datastore.isUserIdentity(), datastore.getUserName(),
+                    datastore.getPassword());
+        } catch (JMSException e) {
+            return new HealthCheckStatus(HealthCheckStatus.Status.KO, i18n.errorInvalidConnection());
         } finally {
             jmsService.closeConnection(connection);
-            jmsService.closeContext(jndiContext);
         }
 
         return new HealthCheckStatus(HealthCheckStatus.Status.OK, i18n.successConnection());

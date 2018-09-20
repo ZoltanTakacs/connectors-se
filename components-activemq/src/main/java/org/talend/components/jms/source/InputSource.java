@@ -28,9 +28,9 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.naming.Context;
-import javax.naming.NamingException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.talend.components.jms.service.I18nMessage;
 import org.talend.sdk.component.api.configuration.Option;
 import org.talend.sdk.component.api.input.Producer;
@@ -54,8 +54,6 @@ public class InputSource implements Serializable {
 
     private Connection connection;
 
-    private Context jndiContext;
-
     private Session session;
 
     private Destination destination;
@@ -74,13 +72,11 @@ public class InputSource implements Serializable {
 
     @PostConstruct
     public void init() {
-        try {
-            // create JNDI context
-            jndiContext = service.getJNDIContext(configuration.getBasicConfig().getConnection().getUrl(),
-                    configuration.getBasicConfig().getConnection().getModuleList());
-            // create ConnectionFactory from JNDI
-            ConnectionFactory connectionFactory = service.getConnectionFactory(jndiContext);
 
+        // create ConnectionFactory
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                configuration.getBasicConfig().getConnection().getUrl());
+        try {
             try {
                 connection = service.getConnection(connectionFactory,
                         configuration.getBasicConfig().getConnection().isUserIdentity(),
@@ -114,8 +110,6 @@ public class InputSource implements Serializable {
 
         } catch (JMSException e) {
             throw new IllegalStateException(i18n.errorCreateJMSInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NamingException e) {
-            throw new IllegalStateException(i18n.errorInstantiateConnectionFactory(e.getMessage()));
         }
     }
 
@@ -154,6 +148,5 @@ public class InputSource implements Serializable {
         service.closeConsumer(consumer);
         service.closeSession(session);
         service.closeConnection(connection);
-        service.closeContext(jndiContext);
     }
 }

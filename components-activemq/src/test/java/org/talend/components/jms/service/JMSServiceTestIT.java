@@ -91,16 +91,6 @@ public class JMSServiceTestIT {
     }
 
     @Test
-    public void missingProviderConfig() {
-        InputMapperConfiguration inputConfiguration = getInputConfiguration();
-        inputConfiguration.getBasicConfig().getConnection().setModuleList(MISSING_PROVIDER);
-        final String inputConfig = configurationByExample().forInstance(inputConfiguration).configured().toQueryString();
-
-        assertThrows(IllegalStateException.class, () -> Job.components().component("jms-input", "JMS://Input?" + inputConfig)
-                .component("collector", "test://collector").connections().from("jms-input").to("collector").build().run());
-    }
-
-    @Test
     public void emptyUrlTest() {
         InputMapperConfiguration inputConfiguration = getInputConfiguration();
         inputConfiguration.getBasicConfig().getConnection().setUrl("");
@@ -180,7 +170,6 @@ public class JMSServiceTestIT {
         OutputConfiguration configuration = new OutputConfiguration();
         BasicConfiguration basicConfiguration = new BasicConfiguration();
         JmsDataStore dataStore = new JmsDataStore();
-        dataStore.setModuleList(JMS_PROVIDER);
         dataStore.setUrl(URL);
         basicConfiguration.setDestination(DESTINATION);
         basicConfiguration.setMessageType(MessageType.QUEUE);
@@ -193,7 +182,6 @@ public class JMSServiceTestIT {
         InputMapperConfiguration configuration = new InputMapperConfiguration();
         BasicConfiguration basicConfiguration = new BasicConfiguration();
         JmsDataStore dataStore = new JmsDataStore();
-        dataStore.setModuleList(JMS_PROVIDER);
         dataStore.setUrl(URL);
         basicConfiguration.setDestination(DESTINATION);
         basicConfiguration.setMessageType(MessageType.QUEUE);

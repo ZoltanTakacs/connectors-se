@@ -24,9 +24,9 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.json.JsonObject;
 import javax.naming.Context;
-import javax.naming.NamingException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.talend.components.jms.service.I18nMessage;
 import org.talend.sdk.component.api.component.Icon;
 import org.talend.sdk.component.api.component.Version;
@@ -74,13 +74,11 @@ public class Output implements Serializable {
 
     @PostConstruct
     public void init() {
-        try {
-            // create JNDI context
-            jndiContext = service.getJNDIContext(configuration.getBasicConfig().getConnection().getUrl(),
-                    configuration.getBasicConfig().getConnection().getModuleList());
-            // create ConnectionFactory from JNDI
-            ConnectionFactory connectionFactory = service.getConnectionFactory(jndiContext);
 
+        // create ConnectionFactory
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+                configuration.getBasicConfig().getConnection().getUrl());
+        try {
             try {
                 connection = service.getConnection(connectionFactory,
                         configuration.getBasicConfig().getConnection().isUserIdentity(),
@@ -105,8 +103,6 @@ public class Output implements Serializable {
             producer.setDeliveryMode(configuration.getDeliveryMode().getIntValue());
         } catch (JMSException e) {
             throw new IllegalStateException(i18n.errorCreateJMSInstance());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NamingException e) {
-            throw new IllegalStateException(i18n.errorInstantiateConnectionFactory(e.getMessage()));
         }
 
     }
@@ -129,6 +125,5 @@ public class Output implements Serializable {
         service.closeProducer(producer);
         service.closeSession(session);
         service.closeConnection(connection);
-        service.closeContext(jndiContext);
     }
 }

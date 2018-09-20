@@ -19,15 +19,11 @@ public interface I18nMessage {
 
     String errorEmptyURL();
 
-    String errorLoadProvider(String driverId, String missingJars);
-
     String errorInvalidConnection();
 
     String errorStartMessagesDelivery();
 
     String errorCreateJMSInstance();
-
-    String errorInstantiateConnectionFactory(String message);
 
     String errorCantSendMessage();
 
@@ -40,8 +36,6 @@ public interface I18nMessage {
     String warnSessionCantBeClosed();
 
     String warnConnectionCantBeClosed();
-
-    String warnJNDIContextCantBeClosed();
 
     String successConnection();
 }

@@ -29,6 +29,7 @@
         You can also use it on the command line: -Dtalend.documentation.htmlAndPdf=true
         -->
         <talend.documentation.htmlAndPdf>false</talend.documentation.htmlAndPdf>
+        <activemq-all.version>5.15.6</activemq-all.version>
 
         <!--
         if you want to deploy into the studio you can use the related goal:
@@ -190,6 +191,11 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${activemq-all.version}</version>
         </dependency>
     </dependencies>
 
