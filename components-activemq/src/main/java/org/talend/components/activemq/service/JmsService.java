@@ -45,15 +45,25 @@ public class JmsService {
         if (!dataStore.getFailover() && !dataStore.getStaticDiscovery()) {
             url = getBrokerURL(dataStore.getUseSSL(), dataStore.getHost(), dataStore.getPort());
         } else {
-
             StringJoiner brokerURLs = new StringJoiner(",");
             for (Broker brokerBroker : dataStore.getBrokers()) {
                 brokerURLs.add(getBrokerURL(dataStore.getUseSSL(), brokerBroker.getHost(), brokerBroker.getPort()));
             }
-            url = getTransport(dataStore) + ":(" + brokerURLs + ")";
+            url = getTransport(dataStore) + ":(" + brokerURLs + ")" + getURIParameters(dataStore);
         }
         log.info(url);
         return new ActiveMQConnectionFactory(url);
+    }
+
+    private String getURIParameters(JmsDataStore dataStore) {
+        String URIParameters = "";
+        if (dataStore.getFailover()) {
+            URIParameters = dataStore.getFailoverURIParameters();
+        }
+        if (dataStore.getStaticDiscovery()) {
+            URIParameters = dataStore.getStaticDiscoveryURIParameters();
+        }
+        return URIParameters;
     }
 
     private String getBrokerURL(Boolean isSSLUsed, String host, String port) {

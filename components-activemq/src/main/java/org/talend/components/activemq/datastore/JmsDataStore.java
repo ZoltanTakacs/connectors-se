@@ -32,8 +32,9 @@ import static org.talend.sdk.component.api.configuration.condition.ActiveIfs.Ope
 
 @Data
 @GridLayout({ @GridLayout.Row({ "failover" }), @GridLayout.Row({ "staticDiscovery" }), @GridLayout.Row({ "useSSL" }),
-        @GridLayout.Row({ "URIParameters" }), @GridLayout.Row({ "brokers" }), @GridLayout.Row({ "host", "port" }),
-        @GridLayout.Row("userIdentity"), @GridLayout.Row({ "userName", "password" }) })
+        @GridLayout.Row({ "failoverURIParameters" }), @GridLayout.Row({ "staticDiscoveryURIParameters" }),
+        @GridLayout.Row({ "brokers" }), @GridLayout.Row({ "host", "port" }), @GridLayout.Row("userIdentity"),
+        @GridLayout.Row({ "userName", "password" }) })
 @DataStore("basic")
 @Checkable(ACTION_BASIC_HEALTH_CHECK)
 @Documentation("A connection to a data base")
@@ -54,10 +55,14 @@ public class JmsDataStore implements Serializable {
     private Boolean useSSL = false;
 
     @Option
-    @ActiveIfs(value = { @ActiveIf(target = "failover", value = "true"),
-            @ActiveIf(target = "staticDiscovery", value = "true") }, operator = OR)
+    @ActiveIf(target = "failover", value = "true")
     @Documentation("")
-    private String URIParameters;
+    private String failoverURIParameters = "?randomize=false";
+
+    @Option
+    @ActiveIf(target = "staticDiscovery", value = "true")
+    @Documentation("")
+    private String staticDiscoveryURIParameters = "?transport.maxReconnectDelay=5000&transport.useExponentialBackOff=false";
 
     @Option
     @ActiveIfs(value = { @ActiveIf(target = "failover", value = "true"),
