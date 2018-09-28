@@ -135,7 +135,7 @@ public class JmsService {
         }
     }
 
-    public void commit(Session session){
+    public void commit(Session session) {
         try {
             if (session.getTransacted()) {
                 session.commit();

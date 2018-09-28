@@ -65,7 +65,7 @@ public class InputSource implements Serializable {
     private Queue<String> messages = new LinkedList<>();
 
     public InputSource(@Option final InputMapperConfiguration configuration, final JmsService service,
-                       final JsonBuilderFactory jsonBuilderFactory, final I18nMessage i18nMessage) {
+            final JsonBuilderFactory jsonBuilderFactory, final I18nMessage i18nMessage) {
         this.configuration = configuration;
         this.service = service;
         this.jsonBuilderFactory = jsonBuilderFactory;
