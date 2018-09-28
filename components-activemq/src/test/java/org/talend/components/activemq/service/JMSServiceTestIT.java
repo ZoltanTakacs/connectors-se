@@ -317,7 +317,7 @@ public class JMSServiceTestIT {
         JmsDataStore dataStore = new JmsDataStore();
         dataStore.setHost(LOCALHOST);
         dataStore.setPort(PORT);
-        dataStore.setUseSSL(true);
+        dataStore.setSSL(true);
         basicConfiguration.setDestination(DESTINATION);
         basicConfiguration.setMessageType(MessageType.QUEUE);
         basicConfiguration.setConnection(dataStore);
@@ -331,7 +331,7 @@ public class JMSServiceTestIT {
         JmsDataStore dataStore = new JmsDataStore();
         dataStore.setHost(LOCALHOST);
         dataStore.setPort(PORT);
-        dataStore.setUseSSL(true);
+        dataStore.setSSL(true);
         basicConfiguration.setDestination(DESTINATION);
         basicConfiguration.setMessageType(MessageType.QUEUE);
         DurableSubscriptionConfiguration subsConfig = new DurableSubscriptionConfiguration();

@@ -13,6 +13,8 @@
 package org.talend.components.activemq.source;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Queue;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.jms.Connection;
@@ -60,8 +62,10 @@ public class InputSource implements Serializable {
 
     private final I18nMessage i18n;
 
+    private Queue<String> messages = new LinkedList<>();
+
     public InputSource(@Option final InputMapperConfiguration configuration, final JmsService service,
-            final JsonBuilderFactory jsonBuilderFactory, final I18nMessage i18nMessage) {
+                       final JsonBuilderFactory jsonBuilderFactory, final I18nMessage i18nMessage) {
         this.configuration = configuration;
         this.service = service;
         this.jsonBuilderFactory = jsonBuilderFactory;
@@ -93,7 +97,7 @@ public class InputSource implements Serializable {
                 throw new IllegalStateException(i18n.errorStartMessagesDelivery());
             }
 
-            session = service.getSession(connection);
+            session = service.getSession(connection, configuration.getBasicConfig().getConnection().getTransacted());
 
             destination = service.getDestination(session, configuration.getBasicConfig().getDestination(),
                     configuration.getBasicConfig().getMessageType());
@@ -112,26 +116,50 @@ public class InputSource implements Serializable {
 
     @Producer
     public JsonObject next() {
-
-        String textMessage = null;
         if (counter >= configuration.getMaximumMessages()) {
             return null;
         } else {
-
-            Message message = null;
-            try {
-                message = consumer.receive(configuration.getTimeout() * 1000);
-                if (message != null) {
-                    textMessage = ((TextMessage) message).getText();
-                    message.acknowledge();
-                    counter++;
-                }
-            } catch (JMSException e) {
-                log.error(i18n.errorCantReceiveMessage(), e);
-            }
-            return message != null ? buildJSON(textMessage) : null;
-
+            String message = getMessage();
+            return message != null ? buildJSON(message) : null;
         }
+    }
+
+    private String getMessage() {
+        String message;
+        if (configuration.getBasicConfig().getConnection().getTransacted()) {
+            if (messages.isEmpty()) {
+                receiveNextBatch();
+            }
+            message = messages.poll();
+        } else {
+            message = receiveMessage();
+        }
+        return message;
+    }
+
+    private void receiveNextBatch() {
+        for (int i = 0; i <= configuration.getMaxBatchSize(); i++) {
+            String message = receiveMessage();
+            if (message == null) {
+                break;
+            }
+            messages.add(receiveMessage());
+        }
+        service.commit(session);
+    }
+
+    private String receiveMessage() {
+        Message message;
+        String textMessage = null;
+        try {
+            message = consumer.receive(configuration.getTimeout() * 1000);
+            if (message != null) {
+                textMessage = ((TextMessage) message).getText();
+            }
+        } catch (JMSException e) {
+            log.error(i18n.errorCantReceiveMessage(), e);
+        }
+        return textMessage;
     }
 
     private JsonObject buildJSON(String text) {

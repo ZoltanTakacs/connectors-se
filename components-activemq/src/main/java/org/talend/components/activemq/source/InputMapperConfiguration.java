@@ -26,6 +26,7 @@ import java.io.Serializable;
 @GridLayout(value = { @GridLayout.Row({ "basicConfig" }), @GridLayout.Row({ "subscriptionConfig" }),
         @GridLayout.Row({ "timeout" }), @GridLayout.Row({ "maximumMessages" }),
         @GridLayout.Row({ "messageSelector" }) }, names = GridLayout.FormType.MAIN)
+@GridLayout(value = {@GridLayout.Row({"maxBatchSize"})}, names = GridLayout.FormType.ADVANCED)
 @Documentation("Main configuration class for JMSInput component")
 @Data
 public class InputMapperConfiguration implements Serializable {
@@ -55,5 +56,9 @@ public class InputMapperConfiguration implements Serializable {
     @Option
     @Documentation("Message Selector Expression used to receive only messages whose headers and properties match the selector")
     private String messageSelector;
+
+    @Option
+    @Documentation("Maximum batch size")
+    private Integer maxBatchSize;
 
 }

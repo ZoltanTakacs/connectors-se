@@ -23,7 +23,6 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.json.JsonObject;
-import javax.naming.Context;
 
 import lombok.extern.slf4j.Slf4j;
 import org.talend.components.activemq.service.I18nMessage;
@@ -31,6 +30,7 @@ import org.talend.sdk.component.api.component.Icon;
 import org.talend.sdk.component.api.component.Version;
 import org.talend.sdk.component.api.configuration.Option;
 import org.talend.sdk.component.api.meta.Documentation;
+import org.talend.sdk.component.api.processor.AfterGroup;
 import org.talend.sdk.component.api.processor.ElementListener;
 import org.talend.sdk.component.api.processor.Input;
 import org.talend.sdk.component.api.processor.Processor;
@@ -55,8 +55,6 @@ public class Output implements Serializable {
     private final JmsService service;
 
     private Connection connection;
-
-    private Context jndiContext;
 
     private Session session;
 
@@ -92,7 +90,7 @@ public class Output implements Serializable {
                 throw new IllegalStateException(i18n.errorStartMessagesDelivery());
             }
 
-            session = service.getSession(connection);
+            session = service.getSession(connection, configuration.getBasicConfig().getConnection().getTransacted());
 
             destination = service.getDestination(session, configuration.getBasicConfig().getDestination(),
                     configuration.getBasicConfig().getMessageType());
@@ -112,6 +110,11 @@ public class Output implements Serializable {
         } catch (JMSException e) {
             throw new IllegalStateException(i18n.errorCantSendMessage());
         }
+    }
+
+    @AfterGroup
+    public void after() {
+        service.commit(session);
     }
 
     private String getMessage(JsonObject record) {

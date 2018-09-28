@@ -25,7 +25,7 @@ class ActionServiceTestIT {
         JmsDataStore dataStore = new JmsDataStore();
         dataStore.setHost(LOCALHOST);
         dataStore.setPort(PORT);
-        dataStore.setUseSSL(true);
+        dataStore.setSSL(true);
         HealthCheckStatus status = actionService.validateBasicDatastore(dataStore);
 
         assertEquals(HealthCheckStatus.Status.OK, status.getStatus());
@@ -35,7 +35,7 @@ class ActionServiceTestIT {
     public void testJMSSuccessfulConnectionStaticDiscovery() {
         JmsDataStore dataStore = new JmsDataStore();
         dataStore.setStaticDiscovery(true);
-        dataStore.setUseSSL(true);
+        dataStore.setSSL(true);
         List<Broker> brokerList = new ArrayList<>();
         Broker broker1 = new Broker();
         broker1.setHost("test");
@@ -54,7 +54,7 @@ class ActionServiceTestIT {
     public void testJMSSuccessfulConnectionFailover() {
         JmsDataStore dataStore = new JmsDataStore();
         dataStore.setFailover(true);
-        dataStore.setUseSSL(true);
+        dataStore.setSSL(true);
         List<Broker> brokerList = new ArrayList<>();
         Broker broker1 = new Broker();
         broker1.setHost("test");

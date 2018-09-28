@@ -31,10 +31,10 @@ import static org.talend.sdk.component.api.configuration.condition.ActiveIfs.Ope
 import static org.talend.sdk.component.api.configuration.condition.ActiveIfs.Operator.OR;
 
 @Data
-@GridLayout({ @GridLayout.Row({ "failover" }), @GridLayout.Row({ "staticDiscovery" }), @GridLayout.Row({ "useSSL" }),
+@GridLayout({ @GridLayout.Row({ "failover" }), @GridLayout.Row({ "staticDiscovery" }), @GridLayout.Row({ "SSL" }),
         @GridLayout.Row({ "failoverURIParameters" }), @GridLayout.Row({ "staticDiscoveryURIParameters" }),
         @GridLayout.Row({ "brokers" }), @GridLayout.Row({ "host", "port" }), @GridLayout.Row("userIdentity"),
-        @GridLayout.Row({ "userName", "password" }) })
+        @GridLayout.Row({ "userName", "password" }), @GridLayout.Row({ "transacted" }) })
 @DataStore("basic")
 @Checkable(ACTION_BASIC_HEALTH_CHECK)
 @Documentation("A connection to a data base")
@@ -52,7 +52,7 @@ public class JmsDataStore implements Serializable {
 
     @Option
     @Documentation("")
-    private Boolean useSSL = false;
+    private Boolean SSL = false;
 
     @Option
     @ActiveIf(target = "failover", value = "true")
@@ -96,5 +96,9 @@ public class JmsDataStore implements Serializable {
     @Documentation("Input for password")
     @ActiveIf(target = "userIdentity", value = "true")
     private String password;
+
+    @Option
+    @Documentation("")
+    private Boolean transacted;
 
 }

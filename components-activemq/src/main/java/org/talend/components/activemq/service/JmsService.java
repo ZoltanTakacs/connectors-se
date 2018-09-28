@@ -43,11 +43,11 @@ public class JmsService {
     public ConnectionFactory createConnectionFactory(JmsDataStore dataStore) {
         String url;
         if (!dataStore.getFailover() && !dataStore.getStaticDiscovery()) {
-            url = getBrokerURL(dataStore.getUseSSL(), dataStore.getHost(), dataStore.getPort());
+            url = getBrokerURL(dataStore.getSSL(), dataStore.getHost(), dataStore.getPort());
         } else {
             StringJoiner brokerURLs = new StringJoiner(",");
             for (Broker brokerBroker : dataStore.getBrokers()) {
-                brokerURLs.add(getBrokerURL(dataStore.getUseSSL(), brokerBroker.getHost(), brokerBroker.getPort()));
+                brokerURLs.add(getBrokerURL(dataStore.getSSL(), brokerBroker.getHost(), brokerBroker.getPort()));
             }
             url = getTransport(dataStore) + ":(" + brokerURLs + ")" + getURIParameters(dataStore);
         }
@@ -85,8 +85,9 @@ public class JmsService {
         return sslTransport ? "ssl" : "tcp";
     }
 
-    public Session getSession(Connection connection) throws JMSException {
-        return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    public Session getSession(Connection connection, Boolean transacted) throws JMSException {
+        int acknowledge = transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE;
+        return connection.createSession(transacted, acknowledge);
     }
 
     public Connection getConnection(ConnectionFactory connectionFactory, boolean isUserIdentity, String userName, String password)
@@ -130,6 +131,21 @@ public class JmsService {
                 consumer.close();
             } catch (JMSException e) {
                 log.warn(i18n.warnConsumerCantBeClosed(), e);
+            }
+        }
+    }
+
+    public void commit(Session session){
+        try {
+            if (session.getTransacted()) {
+                session.commit();
+            }
+        } catch (JMSException e) {
+
+            try {
+                session.rollback();
+            } catch (JMSException e1) {
+                log.error("Can't rollback", e);
             }
         }
     }
