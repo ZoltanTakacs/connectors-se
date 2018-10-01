@@ -29,34 +29,6 @@
       <groupId>org.talend.components</groupId>
       <artifactId>bigquery-runtime</artifactId>
       <version>${tcomp0.version}</version>
-
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-extensions-google-cloud-platform-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-        </exclusion>
-
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-runners-direct-java</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-extensions-protobuf</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-io-hadoop-common</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -66,33 +38,6 @@
     <dependency>
       <groupId>org.talend.sdk.component</groupId>
       <artifactId>component-runtime-beam-junit</artifactId>
-
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-extensions-google-cloud-platform-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-runners-direct-java</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-extensions-protobuf</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.beam</groupId>
-          <artifactId>beam-sdks-java-io-hadoop-common</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>

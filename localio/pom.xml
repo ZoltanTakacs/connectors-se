@@ -43,26 +43,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-extensions-protobuf</artifactId>
-      <version>${beam.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-io-hadoop-common</artifactId>
-      <version>${beam.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.talend.daikon</groupId>
       <artifactId>daikon</artifactId>
       <version>${daikon.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
-      <version>2.7.3</version>
     </dependency>
 
     <dependency>
@@ -100,13 +83,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
-    <dependency>
-      <groupId>org.apache.beam</groupId>
-      <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-      <version>${beam.version}</version>
-    </dependency>
-    
+
     <!-- guava for components-adapter-beam -->
     <dependency>
       <groupId>com.google.guava</groupId>
